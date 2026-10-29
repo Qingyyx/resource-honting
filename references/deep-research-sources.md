@@ -3,7 +3,7 @@
 > 用途：当任务是**对某行业/话题做系统性深度调研**（要权威结论、一手数据、专家观点、从业者叙事）时读本文件。
 > 与通用搜索的区别：深度调研不是"搜一条答案"，而是**分层取证、交叉印证、追溯原始出处**后产出一份带证据等级的结论。
 > 置信度总表见 `platform-trust.md`，核验方法见 `credibility-framework.md`，AI 深度研究工具见 `search-tools.md`。
-> 本文件的 opencli 命令均已对照 live registry（2026-10 核实）；新站点用前先 `opencli <site> -h`。
+> 本文件按数据源选择路线：直接访问、官方 API、连接器与专用 CLI 均可；OpenCLI 仅在其能力有帮助时使用，命令须以 live registry 和实时帮助为准。
 
 ## 一、分层取证模型（先定层级，再找源）
 
@@ -11,13 +11,13 @@
 
 | 层级 | 内容 | 用途 | 置信基调 |
 |---|---|---|---|
-| **L1 一手数据** | 官方统计、公司披露（年报/公告/招股书）、同行评议论文、监管文件、央行/海关数据 | 数字和事实的**唯一合格出处** | 高 |
+| **L1 一手数据** | 官方统计、公司披露（年报/公告/招股书）、同行评议论文、监管文件、央行/海关数据 | 原始数字、事实与研究结果；核对方法和适用范围 | 高 |
 | **L2 机构分析** | 券商研报、咨询机构、智库、行业协会报告、学术综述 | 分析框架、行业测算、趋势判断 | 中高（注意立场） |
 | **L3 从业者叙事** | 深度播客访谈、长视频访谈、从业者长文复盘、创始人/高管演讲 | 行业内幕、因果链、"纸面数据背后发生了什么" | 观点级；其中**数据必须回溯 L1** 才可用 |
 | **L4 社区舆情** | 知乎/Reddit/V2EX/小红书等（见 platform-trust.md） | 线索、情绪、个体体验 | 低-中，不作调研结论依据 |
 
 **铁律**：
-- 调研结论至少由 L1+L2 支撑；只有 L3 撑场的结论必须降级表述为"据从业者 X 所述"
+- 可核实事实优先 L1；综合判断结合相关 L1/L2，机构估算注明方法与口径。只有 L3 支撑的说法必须表述为“据从业者 X 所述”，不要强凑不相关证据层级
 - 播客/访谈里出现的关键数字（市场规模、增速、渗透率），SIFT-T 追到原始研报/统计口径才算成立
 - 利益审查照常：卖方研报天然偏乐观、行业协会护本行业、咨询报告带营销性质——"谁付钱给作者"三问不变
 
@@ -27,35 +27,39 @@
 
 | 学科 | 首选源 | 说明 |
 |---|---|---|
-| 计算机/AI | `opencli arxiv search/recent/author`、`opencli dblp search/venue`、`opencli openreview search/reviews`、`opencli hf`（论文详情） | dblp 查会议/期刊谱系；**openreview reviews 能看到 ICLR/NeurIPS 等公开评审全文**（审稿人质疑=免费的批判性同行评审）；arxiv `recent cs.LG` 扫最新风向 |
-| 生物医学 | `opencli pubmed search/review/clinical-trial/mesh/journal/related/citations` | **review 子命令直接筛综述文**；clinical-trial 筛试验；mesh 用主题词表精确检索 |
-| 经济/金融 | NBER（nber.org 工作论文）、RePEc/IDEAS（经济学期刊聚合）、SSRN（预印） | 中文经济政策看《经济研究》《金融研究》（知网/万方） |
-| 中文社科/综合 | `opencli cnki search`（oversea 站）、`opencli wanfang search`、维普 cqvip | 付费墙重；**国家哲学社会科学文献中心 ncpssd.org 免费**，中文论文优先试它 |
-| 跨学科综合 | `opencli semanticscholar search/paper/citations/recommendations`、`opencli openalex search/work`、`opencli google-scholar search/cite/profile`、`opencli baidu-scholar search` | Semantic Scholar/OpenAlex 走 API 无验证码，abstract+tldr+引用图 |
+| 计算机/AI | arXiv、dblp、OpenReview、会议/期刊官网 | arXiv 是预印本库；dblp 是书目索引；公开评审按具体会议/论文查阅，不保证全部公开 |
+| 生物医学 | PubMed、Cochrane、指南发布机构、ClinicalTrials.gov | 用文献类型筛 review/临床试验，用 MeSH 精确检索；登记试验不等于已有有效性结论 |
+| 经济/金融 | NBER、RePEc/IDEAS、SSRN | 区分工作论文、预印本与正式期刊；中文经济政策查对应期刊与官方发布 |
+| 中文社科/综合 | 国家哲学社会科学文献中心 ncpssd.org、知网、万方、维普 | 全文与题录可用范围不同，按机构授权和具体条目检查 |
+| 跨学科综合 | Semantic Scholar、OpenAlex、Google Scholar、Crossref | 书目、引用图、DOI 定位；索引收录不证明同行评议或研究质量 |
+
+先用对应站点或 API；需要批量结构化访问且本机有适配器时，可选择 OpenCLI，调用方式按实时帮助确认。
 
 ### 文献深挖方法（新手 vs 老手的差别）
 
-1. **综述优先**：进入新领域先搜 review/survey/meta-analysis/系统综述，一篇顶二十篇散论文（pubmed 有现成 `review` 子命令）
-2. **引文滚雪球**：找到一篇关键论文后，向后看参考文献（backward 追溯源头），向前看"被引"（forward 找最新进展）：`opencli semanticscholar citations <id>`、`opencli pubmed citations <pmid>`、google-scholar `cite`
-3. **质量分级**（医学证据等级推广到一般）：系统综述/Meta分析 > RCT > 队列/观察研究 > 专家意见/个案；预印本一律降一档
+1. **综述优先**：进入新领域先搜 review/survey/meta-analysis/系统综述，先建立问题、证据和争议的范围（PubMed 可按文献类型筛选）
+2. **引文滚雪球**：找到一篇关键论文后，向后看参考文献（backward 追溯源头），向前看"被引"（forward 找最新进展）：在 Semantic Scholar、OpenAlex、PubMed 或期刊引用页追踪；需要结构化数据时选择对应 API/可用 CLI
+3. **按问题评价质量**：医学干预效果优先相关系统综述与高质量试验；其他学科按研究设计、数据与复现判断。综述质量取决于纳入研究与方法，不将医学证据顺序机械推广到所有领域；预印本明确尚未同行评议
 4. **看钱从哪来**：论文末尾 funding/COI 声明——药企资助的研究结论方向性偏向是实证现象
-5. **AI 学术助手**：Consensus（只用同行评议源回答"学界共识是什么"）、Elicit（批量结构化文献综述）——用法见 `search-tools.md` 第三章
-6. anysearch 备用：`anysearch search "关键词" --content_types academic`（已实测可用，能召回期刊+产业研究院文章）
+5. **AI 学术助手**：Consensus（文献证据问答）、Elicit（批量结构化文献综述）——工具定位见 `search-tools.md` 的研究工具说明，具体引文仍核对原文
+6. 通用发现可用 AnySearch 的 `search "关键词" --content_types academic`，命令前缀取已配置 runtime；具体论文与原文仍回专业库核对
 
-### 结论级 AI 学术工具（直接搜"结论+证据句"，不是搜链接）
+### 结论级 AI 学术工具
 
-| 需求 | 工具 | 关键事实（2026-10 多源核实） |
+| 需求 | 可评估工具 | 核验重点 |
 |---|---|---|
-| "学界对某问题是支持还是反对"（yes/no/mixed） | **Consensus** | Meter 对 top20 命中论文逐字抽取证据分类，非生成；官方承认 ~10% 误判；语料宣称 200M–400M 口径不一致，按宣传数字打折 |
-| 多篇论文特征对比成表（样本/干预/结局/结论） | **Elicit** | 138M（S2+OpenAlex+PubMed+临床试验）；独立评估抽取 F1 81–92%（有编造条目记录）；**官方自认中文语料弱**——中文课题勿用 |
-| 某结论后来被支持还是被反驳 | **scite** | 1.6B Smart Citations（supporting/contrasting/mentioning），有同行评议方法论文；医学/生科覆盖最强；无真免费档 |
-| 全文级证据问答（生物医学，免费） | FutureHouse 平台（Crow）/ Ai2 Asta | 句级引用+沿引文链追证；评测基准用训练截止后的论文防背题 |
-| 对自己上传的论文问答 | NotebookLM | 仅基于给定源作答，引用接地最好（研究显示幻觉率 13% vs 通用 AI 40%） |
-| 中文题的结论级问答 | **CNKI AI**（ai.cnki.net）/ 万方智研 / 维普科创助手 / 知乎直答 | 知网自家"华知大模型"，支持段落检索+文献回溯；知+会员付费 |
+| 学术问题的证据与支持/反对意见 | Consensus | 原始文献、筛选范围、证据句和分类是否对应问题；不把产品生成的结论视作学界共识 |
+| 多篇论文特征成表 | Elicit | 样本、干预、结局等字段回到原文核对；先检查目标语种和学科覆盖 |
+| 被引语境和支持/质疑关系 | scite | 区分真正验证结论与仅提及；打开引用上下文 |
+| 生物医学文献证据问答 | FutureHouse / Ai2 Asta 等 | 当前产品功能、覆盖与原始引文；逐条核查证据句 |
+| 给定论文或文档问答 | NotebookLM 等 | 上传范围、引用位置、文档是否齐全；限定资料范围仍可能产生错误 |
+| 中文专业文献问答 | CNKI AI / 万方 / 维普等官方产品 | 当前权限、原文授权、段落与文献回溯；第三方宣称的全文覆盖核对实际授权与命中页 |
 
-- **授权硬约束**：知网全文不允许第三方索引（2024-08 知网向秘塔发侵权函后秘塔即下架知网题录摘要）——凡第三方 AI 产品声称"检索知网全文"，先查授权，无授权即降为宣传
-- **底层真相**：上述商业工具大多长在同一批开放库上——Semantic Scholar 学术图谱（2.25 亿论文/28 亿引文边）与 OpenAlex（2 亿 work，日更）。深研脚本直接调 `opencli semanticscholar` / `opencli openalex` 即可拿同层原料，不必绕道产品
-- 通用 AI Deep Research（Perplexity 学术模式等）**没有自建论文库**，只是限定域名的网页搜索，实证幻觉引文率最高——仅当开局广度扫描用，产出必须回原文核对
+表中是能力选型入口，不是已接入工具或效果排名。具体功能、语料量、语种、套餐与权限使用前查对应官方说明；不以静态库规模或不同评测中的准确率决定工具优先级。
+
+- **开放原料**：可直接检索 Semantic Scholar、OpenAlex、Crossref 等的网页或 API；需要时选择可用 CLI。书目、引文、开放全文和商业产品的全文授权与分析功能分别判断。
+- **原文与权限**：搜索到题录/摘要不代表取得全文；第三方声称覆盖某付费库时，核对合法访问条件和实际内容范围，不把宣传语当成已验证能力。
+- **AI 输出**：专业问答与通用 Deep Research 都用于发现、整理和追踪证据。生成答案没有自动证据等级，回原文核验后再引用。
 
 ## 三、行业研报与数据平台（L1/L2）
 
@@ -63,10 +67,10 @@
 
 - **国家统计局** stats.gov.cn：宏观、分行业产值、居民收支
 - **部委口径**：工信部（ICT/制造）、海关总署（进出口额）、国家能源局、央行/金融监管总局（金融数据）
-- **政府文件/法律**：`opencli gov-law` / `opencli gov-policy`（opencli 已有适配）
-- **公司一手披露**：A股公告 `opencli eastmoney announcement`、`cninfo 巨潮资讯`（年报/招股书）；港股披露易；美股 SEC EDGAR；财报电话会纪要（earnings call）搜公众号/雪球文本版
-- **行情/财务聚合**：`opencli xueqiu search/stock`（雪球，含财报日期）、`opencli eastmoney quote/kline/holders`、`opencli ths`（同花顺）、美股 `opencli yahoo-finance/barchart/bloomberg`
-- **国际组织开放数据**：World Bank Open Data、OECD Data、IMF、UN Data、Our World in Data、IEA（能源）、Statista（付费，媒体转引时注意追原报告）
+- **政府文件/法律**：制定机关官网、国家法律法规数据库与政府公报；可用站内搜索/API 或按需选 CLI
+- **公司一手披露**：巨潮资讯（年报/招股书）、交易所披露、公司投资者关系、港股披露易、美股 SEC EDGAR；聚合页核对原始公告。财报电话会优先公司提供的录音/文字稿，第三方整理核验原话
+- **行情/财务聚合**：雪球、东方财富、同花顺、Yahoo Finance 等补充发现与结构化查询；价格区分实时/延时、市场时区和复权方式。网页/接口足够时直接使用，需要适配器功能再用 OpenCLI
+- **国际组织开放数据**：World Bank Open Data、OECD Data、IMF、UN Data、IEA（能源）。Our World in Data 是整理分析入口，追每张图的原始数据；Statista 多为聚合/估算，按原报告与方法归类，不自动算 L1
 
 ### 研报 / 机构分析（L2）
 
@@ -78,31 +82,28 @@
 
 ### 行业垂直社区（L3-L4 混合，按 platform-trust 定级）
 
-- **付费行业圈**：`opencli zsxq search/groups`（知识星球，行业大V私密圈，需登录，内容付费筛选有一定质量但立场极强）；`opencli substack search`（海外行业 newsletter）
-- **就业/行业内部**：`opencli 1point3acres`（一亩三分地，留学/海外就业）、`opencli nowcoder`（牛客，国内求职）、`opencli linkedin`、maimai（脉脉，内容接口有限）
-- **垂直领域**：autohome 汽车之家/dongchedi（汽车）、steam（游戏）+ Newzoo（游戏产业）、coingecko/defillama/binance（加密）、imdb/tvmaze（影视）、dianping/ctrip/booking（食酒旅）、hltv（电竞）
-- **技术风向**：hackernews、github-trending、juejin、lobsters、devto、medium（opencli 均有适配）；行业年度 survey：Stack Overflow Developer Survey、State of JS、GitHub Octoverse、DB-Engines（数据库份额）
+- **付费行业圈**：知识星球、Substack 等可补行业叙事，注意付费/登录与作者利益。
+- **就业/行业内部**：一亩三分地、牛客、LinkedIn、脉脉；官方职位和公司公告先查，员工自述另行验证。
+- **垂直领域**：汽车之家/懂车帝（汽车）、Steam 与 Newzoo（游戏）、IMDb/TVmaze（影视）、当地食酒旅平台（消费）；分别判断数据、分析和用户体验的证据性质。
+- **技术风向**：Hacker News、GitHub、掘金等补线索；Stack Overflow Developer Survey、State of JS、GitHub Octoverse 等调查核对样本与方法。
+- 网页、站内搜索与已连接工具按需选择；动漫游戏及其他资源入口见 [source-directory.md](source-directory.md)。
 
 ## 四、深度播客与访谈（L3，从业者叙事层）
 
 **价值**：论文和研报给"数字"，深度访谈给"因果链和行业内幕"——从业者的第一人称叙事是任何纸面源替代不了的；但它是**观点源不是数据源**。
 
-### 检索路径（opencli 已核实）
+### 检索路径
 
-```
-1. 找节目：opencli apple-podcasts search/top <领域关键词>（苹果播客全库含小宇宙节目）
-   或 anysearch "行业 播客 访谈" / 小宇宙网页搜索
-2. 列单集：opencli xiaoyuzhou podcast <id> → podcast-episodes <id>
-3. 取文本：opencli xiaoyuzhou transcript <eid>（转文字稿，需本地小宇宙登录凭证）
-   英文视频访谈：opencli youtube search → opencli youtube transcript <url>
-4. 处理：文字稿落盘后 grep 关键词定位观点段落，只引用原文，不转述加工
-```
+1. 找节目：领域词 + 播客/访谈，用通用搜索、Apple Podcasts/小宇宙/YouTube 等目录或节目官网。
+2. 找单集：节目页、RSS、发布者主页与 show notes；先查发布者是否已有文字版/字幕。
+3. 取文本：有直接文字稿就读取；需站点专有功能时再考虑 OpenCLI 的播客/视频适配器或浏览器。先确认命令、权限和该单集实际支持情况。
+4. 处理：临时文字稿放 `/tmp/`，净化后按关键词定位，核对说话者和上下文；短引文或摘要均附出处与可得的时间戳，遵守引用限额。
 
 ### 已知高质量节目（示例性清单，非穷尽——新节目用上面路径现搜）
 
 - **中文商业/科技**：晚点聊 LateTalk（公司深度）、硅谷101（科技产业）、商业就是这样（第一财经，经济学人解读）、忽左忽右（文化/历史/社科）、声东击西（跨学科对谈）
 - **英文**：Acquired（公司史深度长谈）、Hard Fork（NYT 科技）、Odd Lots（Bloomberg 金融/经济）、Planet Money/The Indicator（NPR 经济学）、Lex Fridman（理工/行业大佬长访谈）、The Journal（WSJ）、20VC / This Week in Startups（VC/创投）、a16z Podcast
-- **视频长访谈**：十三邀（人文）、B站/YouTube 行业峰会演讲+对谈（`opencli bilibili search`）
+- **视频长访谈**：十三邀（人文）、B站/YouTube 行业峰会演讲+对谈（按需使用站内搜索）
 
 ### 引用纪律（L3 专用）
 
@@ -120,8 +121,8 @@
 5. **回溯核验**：每个将写入结论的数字/事实标注层级与出处；L3 关键说法追 L1；陌生机构查背景（SIFT-I）
 6. **汇报**：结论逐条带【L1/L2/L3+出处】标签；附"未解决的分歧"和"信息缺口"清单；**缺口明说，不编**
 
-**频率豁免**：分支内"每站最多 2 次"限制针对检索类调用；深度调研中"逐篇取论文/逐期取文字稿"属于不同资源抓取，不计入重试次数，但单站批量仍节流（间隔调用，失败即换源，不死磕）。
+**检索预算**：按维度与证据缺口推进，改词、引文追踪、读取不同论文/单集均属于有效深入；同一故障不反复重试。优先补齐影响结论的证据，单站批量读取遵守服务限流。
 
 ## 六、AI 深度研究工具的位置
 
-Perplexity / ChatGPT Deep Research / Gemini Deep Research 可作**广度扫描加速器**（快速建立领域地图、找线索），但产出**不自动获得任何层级**——逐条引文核实后才归档；幻觉引文率参考 credibility-framework.md 第三章"AI 输出纪律"。opencli 已有 chatgpt/gemini 的 deep research 报告读取适配（`opencli chatgpt -h` 查实时签名）。
+Perplexity / ChatGPT Deep Research / Gemini Deep Research 可作**广度扫描加速器**（快速建立领域地图、找线索），但产出**不自动获得任何层级**——逐条引文核实后才归档；核验规则参考 credibility-framework.md 的“AI 输出纪律”。选择当前实际可用的产品和读取方式；OpenCLI 的相关适配仅在需要时查实时帮助，不作为深研前提。
