@@ -1,0 +1,32 @@
+{
+  "as_of": "2026-10-31",
+  "target_cases": 72,
+  "seed_cases": 24,
+  "min_per_cell": 2,
+  "min_per_domain": 1,
+  "cells": [
+    {"knowledge": "public", "answer": "deterministic"},
+    {"knowledge": "public", "answer": "multihop"},
+    {"knowledge": "public", "answer": "analysis"},
+    {"knowledge": "public", "answer": "negative"},
+    {"knowledge": "professional", "answer": "deterministic"},
+    {"knowledge": "professional", "answer": "multihop"},
+    {"knowledge": "professional", "answer": "analysis"},
+    {"knowledge": "professional", "answer": "negative"},
+    {"knowledge": "niche", "answer": "deterministic"},
+    {"knowledge": "niche", "answer": "multihop"},
+    {"knowledge": "niche", "answer": "analysis"},
+    {"knowledge": "niche", "answer": "negative"}
+  ],
+  "domains": [
+    "academic",
+    "engineering",
+    "product",
+    "business",
+    "legal",
+    "local",
+    "media",
+    "data",
+    "general"
+  ]
+}

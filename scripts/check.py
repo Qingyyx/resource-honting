@@ -10,6 +10,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import re
 import sys
 from pathlib import Path
@@ -98,6 +99,22 @@ def gate_budget() -> list[str]:
     return []
 
 
+def gate_eval_cases() -> list[str]:
+    validate_path = ROOT / "tests" / "eval" / "validate.py"
+    cases_path = ROOT / "tests" / "eval" / "cases.json"
+    suite_path = ROOT / "tests" / "eval" / "suite.json"
+    for path in (validate_path, cases_path, suite_path):
+        if not path.exists():
+            return [f"缺少 {path.relative_to(ROOT)}"]
+    spec = importlib.util.spec_from_file_location("eval_validate", validate_path)
+    if spec is None or spec.loader is None:
+        return ["无法加载 tests/eval/validate.py"]
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    errors, _ = module.validate_cases(module.load_cases(cases_path), module.load_suite(suite_path))
+    return errors
+
+
 def gate_field_notes_lines() -> list[str]:
     errs: list[str] = []
     for lineno, line in enumerate(read(FIELD_NOTES).splitlines(), 1):
@@ -119,6 +136,7 @@ GATES = {
     "reference-index": gate_all_references_listed,
     "budget": gate_budget,
     "field-notes-format": gate_field_notes_lines,
+    "eval-cases": gate_eval_cases,
 }
 
 GATE_DESC = {
@@ -128,6 +146,7 @@ GATE_DESC = {
     "reference-index": "references 下每个文件都被加载表引用",
     "budget": f"SKILL.md 不超过 {MAX_SKILL_LINES} 行",
     "field-notes-format": "field-notes 新条目 5 段且判定合法",
+    "eval-cases": "分层回归用例的字段、覆盖与 gold 有效期",
 }
 
 

@@ -1,0 +1,636 @@
+[
+  {
+    "id": "pub-general-sugar-limit",
+    "stratum": {"knowledge": "public", "answer": "deterministic"},
+    "domain": "general",
+    "locale": "zh-CN",
+    "query": "世界卫生组织建议成人每天添加糖摄入量不超过总能量的多少？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["general", "academic"],
+        "effort_any": ["quick", "standard"],
+        "channels_any": ["ddgs", "anysearch", "exa", "direct-primary"]
+      },
+      "answer": {"must_contain": ["10%"], "must_not_contain": ["25克", "50克"]},
+      "facts": [
+        {"value": "10%", "source_hosts": ["who.int"], "match": "contains"}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["who.int"]}
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "general"]
+  },
+  {
+    "id": "pub-legal-pipl-date",
+    "stratum": {"knowledge": "public", "answer": "deterministic"},
+    "domain": "legal",
+    "locale": "zh-CN",
+    "query": "《中华人民共和国个人信息保护法》自哪一天起施行？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["legal"],
+        "effort_any": ["quick", "standard"],
+        "channels_any": ["direct-primary", "ddgs", "anysearch", "exa"]
+      },
+      "answer": {"must_contain": ["2021-11-01"], "must_not_contain": ["2020-01-01", "2022-01-01"]},
+      "facts": [
+        {"value": "2021-11-01", "source_hosts": ["flk.npc.gov.cn", "npc.gov.cn"], "match": "contains"}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["flk.npc.gov.cn", "npc.gov.cn"]}
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "legal"]
+  },
+  {
+    "id": "pub-data-gdp-2024",
+    "stratum": {"knowledge": "public", "answer": "multihop"},
+    "domain": "data",
+    "locale": "zh-CN",
+    "query": "中国 2024 年国内生产总值是多少？按不变价格计算比上年增长多少？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["data", "business"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {"must_contain": ["134.9", "5.0%"]},
+      "facts": [
+        {"value": "134.9", "source_hosts": ["stats.gov.cn"], "match": "contains"},
+        {"value": "5.0%", "source_hosts": ["stats.gov.cn"], "match": "contains"}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["stats.gov.cn"]}
+    },
+    "budget": {"max_queries": 8, "max_wall_ms": 60000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "data"]
+  },
+  {
+    "id": "pub-general-grand-canal",
+    "stratum": {"knowledge": "public", "answer": "multihop"},
+    "domain": "general",
+    "locale": "zh-CN",
+    "query": "京杭大运河全长多少公里？不同资料给出的长度为什么不一样？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["general", "data"],
+        "effort_any": ["standard", "deep"]
+      },
+      "answer": {
+        "must_contain_groups": [
+          ["1794", "1797", "1800"],
+          ["口径", "定义", "测量", "起止"]
+        ]
+      },
+      "facts": [
+        {"value": "1794", "source_hosts": ["gov.cn", "edu.cn", "org.cn"], "match": "contains"}
+      ],
+      "sources": {"min": 2}
+    },
+    "budget": {"max_queries": 8, "max_wall_ms": 60000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["general"]
+  },
+  {
+    "id": "pub-product-robot-vacuum",
+    "stratum": {"knowledge": "public", "answer": "analysis"},
+    "domain": "product",
+    "locale": "zh-CN",
+    "query": "3000 元价位，2026 年哪款扫地机器人的拖地能力更强？请给出独立实测依据。",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-06-30",
+    "grading": "rubric",
+    "expect": {
+      "route": {
+        "domain_any": ["product"],
+        "effort_any": ["standard", "deep"]
+      },
+      "answer": {
+        "must_contain_any": ["实测", "测评", "测试"],
+        "must_not_contain": ["绝对最好", "毫无疑问"]
+      },
+      "sources": {"min": 2},
+      "rubric": "rubrics/product-comparison.md",
+      "needs_human": true
+    },
+    "budget": {"max_queries": 12, "max_wall_ms": 120000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "deep", "product"]
+  },
+  {
+    "id": "pub-product-water-purifier",
+    "stratum": {"knowledge": "public", "answer": "analysis"},
+    "domain": "product",
+    "locale": "zh-CN",
+    "query": "家用净水器选 RO 反渗透还是超滤？分别适合什么情况？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-06-30",
+    "grading": "rubric",
+    "expect": {
+      "route": {
+        "domain_any": ["product"],
+        "effort_any": ["standard", "deep"]
+      },
+      "answer": {
+        "must_contain_all": ["RO", "超滤"],
+        "must_contain_any": ["水质", "场景", "需求"]
+      },
+      "sources": {"min": 2},
+      "rubric": "rubrics/product-comparison.md",
+      "needs_human": true
+    },
+    "budget": {"max_queries": 12, "max_wall_ms": 120000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["deep", "product"]
+  },
+  {
+    "id": "pub-engineering-python4-false",
+    "stratum": {"knowledge": "public", "answer": "negative"},
+    "domain": "engineering",
+    "locale": "zh-CN",
+    "query": "Python 4.0 在 2025 年发布时为什么移除了 GIL？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "status_any": ["answered", "abstained"],
+      "route": {
+        "domain_any": ["engineering"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {
+        "must_contain_any": ["没有发布", "尚未发布", "不存在", "前提错误", "并未发布"],
+        "must_not_contain": ["已于2025年发布"]
+      },
+      "facts": []
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "engineering"]
+  },
+  {
+    "id": "pub-media-three-body-nobel",
+    "stratum": {"knowledge": "public", "answer": "negative"},
+    "domain": "media",
+    "locale": "zh-CN",
+    "query": "《三体》获得诺贝尔文学奖是哪一年？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "status_any": ["answered", "abstained"],
+      "route": {
+        "domain_any": ["media"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {
+        "must_contain_any": ["雨果奖", "没有获得诺贝尔", "未获得诺贝尔", "不是诺贝尔"],
+        "must_not_contain": ["答案是2015年"]
+      },
+      "facts": []
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "media"]
+  },
+  {
+    "id": "pro-academic-crispr-doi",
+    "stratum": {"knowledge": "professional", "answer": "deterministic"},
+    "domain": "academic",
+    "locale": "zh-CN",
+    "query": "Jinek 等人 2012 年在 Science 发表的 CRISPR-Cas9 原始论文 DOI 是多少？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["academic"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {"must_contain": ["10.1126/science.1225829"]},
+      "facts": [
+        {"value": "10.1126/science.1225829", "source_hosts": ["doi.org", "science.org", "crossref.org", "openalex.org"], "match": "contains"}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["doi.org", "science.org", "crossref.org"]}
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "academic"]
+  },
+  {
+    "id": "pro-engineering-numpy2-python",
+    "stratum": {"knowledge": "professional", "answer": "deterministic"},
+    "domain": "engineering",
+    "locale": "zh-CN",
+    "query": "NumPy 2.0 要求的最低 Python 版本是多少？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["engineering"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {"must_contain": ["3.9"]},
+      "facts": [
+        {"value": "3.9", "source_hosts": ["numpy.org", "github.com"], "match": "contains"}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["numpy.org", "github.com"]}
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["engineering"]
+  },
+  {
+    "id": "pro-business-moutai-2023",
+    "stratum": {"knowledge": "professional", "answer": "multihop"},
+    "domain": "business",
+    "locale": "zh-CN",
+    "query": "贵州茅台 2023 年营业收入和归母净利润分别是多少？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "source_only",
+    "expect": {
+      "route": {
+        "domain_any": ["business"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {"must_contain": ["亿元"], "must_contain_any": ["营业收入", "净利润"]},
+      "facts": [
+        {"claim_contains": ["营业收入"], "source_hosts": ["moutaichina.com", "cninfo.com.cn", "sse.com.cn"]},
+        {"claim_contains": ["净利润"], "source_hosts": ["moutaichina.com", "cninfo.com.cn", "sse.com.cn"]}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["moutaichina.com", "cninfo.com.cn", "sse.com.cn"]},
+      "needs_human": true
+    },
+    "budget": {"max_queries": 8, "max_wall_ms": 60000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "business"]
+  },
+  {
+    "id": "pro-engineering-python-eol",
+    "stratum": {"knowledge": "professional", "answer": "multihop"},
+    "domain": "engineering",
+    "locale": "zh-CN",
+    "query": "Python 3.12 和 3.13 的官方安全支持分别到哪一天结束？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["engineering"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {"must_contain": ["2028-10", "2029-10"]},
+      "facts": [
+        {"value": "2028-10", "source_hosts": ["devguide.python.org", "python.org"], "match": "contains"},
+        {"value": "2029-10", "source_hosts": ["devguide.python.org", "python.org"], "match": "contains"}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["devguide.python.org", "python.org"]}
+    },
+    "budget": {"max_queries": 8, "max_wall_ms": 60000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["engineering"]
+  },
+  {
+    "id": "pro-academic-statin-primary",
+    "stratum": {"knowledge": "professional", "answer": "analysis"},
+    "domain": "academic",
+    "locale": "zh-CN",
+    "query": "他汀类药物用于心血管疾病一级预防，目前的证据是否支持广泛使用？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "rubric",
+    "expect": {
+      "route": {
+        "domain_any": ["academic"],
+        "effort_any": ["deep", "standard"]
+      },
+      "answer": {
+        "must_contain_all": ["一级预防"],
+        "must_contain_any": ["获益", "风险", "争议"],
+        "must_not_contain": ["所有人都应该"]
+      },
+      "sources": {"min": 2},
+      "rubric": "rubrics/medical-evidence.md",
+      "needs_human": true
+    },
+    "budget": {"max_queries": 12, "max_wall_ms": 120000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["deep", "academic"]
+  },
+  {
+    "id": "pro-data-nev-penetration",
+    "stratum": {"knowledge": "professional", "answer": "analysis"},
+    "domain": "data",
+    "locale": "zh-CN",
+    "query": "2024 年中国新能源汽车渗透率是多少？为什么不同机构给出的数字不一样？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "rubric",
+    "expect": {
+      "route": {
+        "domain_any": ["data", "business"],
+        "effort_any": ["standard", "deep"]
+      },
+      "answer": {
+        "must_contain": ["渗透率"],
+        "must_contain_any": ["批发", "零售", "口径"]
+      },
+      "sources": {"min": 2},
+      "rubric": "rubrics/data-definition.md",
+      "needs_human": true
+    },
+    "budget": {"max_queries": 12, "max_wall_ms": 120000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "deep", "data"]
+  },
+  {
+    "id": "pro-engineering-npm-missing",
+    "stratum": {"knowledge": "professional", "answer": "negative"},
+    "domain": "engineering",
+    "locale": "zh-CN",
+    "query": "npm 包 @types/definitely-not-a-real-package-xyz-2026 的最新版本是多少？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "status_any": ["answered", "abstained"],
+      "route": {
+        "domain_any": ["engineering"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {
+        "must_contain_any": ["不存在", "未找到", "没有这个包", "404"],
+        "must_not_contain": ["最新版本是1."]
+      },
+      "facts": []
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["engineering"]
+  },
+  {
+    "id": "pro-legal-pipl-24h-false",
+    "stratum": {"knowledge": "professional", "answer": "negative"},
+    "domain": "legal",
+    "locale": "zh-CN",
+    "query": "《个人信息保护法》是否规定数据泄露后必须在 24 小时内报告？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "status_any": ["answered", "abstained"],
+      "route": {
+        "domain_any": ["legal"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {
+        "must_contain_any": ["没有规定24小时", "未规定24小时", "不是24小时", "立即"],
+        "must_not_contain": ["必须24小时内报告"]
+      },
+      "facts": []
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["legal"]
+  },
+  {
+    "id": "niche-engineering-nrf52840",
+    "stratum": {"knowledge": "niche", "answer": "deterministic"},
+    "domain": "engineering",
+    "locale": "zh-CN",
+    "query": "Nordic nRF52840 的 Flash 和 RAM 容量分别是多少？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["engineering"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {"must_contain": ["1MB", "256KB"]},
+      "facts": [
+        {"value": "1MB", "source_hosts": ["nordicsemi.com", "infocenter.nordicsemi.com"], "match": "contains"},
+        {"value": "256KB", "source_hosts": ["nordicsemi.com", "infocenter.nordicsemi.com"], "match": "contains"}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["nordicsemi.com", "infocenter.nordicsemi.com"]}
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "engineering"]
+  },
+  {
+    "id": "niche-media-gits-1995",
+    "stratum": {"knowledge": "niche", "answer": "deterministic"},
+    "domain": "media",
+    "locale": "zh-CN",
+    "query": "1995 年《攻壳机动队》剧场版在日本的首映日期是哪天？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "route": {
+        "domain_any": ["media"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {"must_contain": ["1995-11-18"]},
+      "facts": [
+        {"value": "1995-11-18", "source_hosts": ["ja.wikipedia.org", "zh.wikipedia.org", "allcinema.net", "eiga.com"], "match": "contains"}
+      ],
+      "sources": {"min": 1}
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "media"]
+  },
+  {
+    "id": "niche-local-hangzhou-flex",
+    "stratum": {"knowledge": "niche", "answer": "multihop"},
+    "domain": "local",
+    "locale": "zh-CN",
+    "query": "杭州市 2026 年灵活就业人员社保补贴的标准和申请条件是什么？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-03-31",
+    "grading": "source_only",
+    "expect": {
+      "route": {
+        "domain_any": ["local", "legal"],
+        "effort_any": ["standard", "deep"]
+      },
+      "answer": {"must_contain_any": ["补贴", "社保", "灵活就业"]},
+      "facts": [
+        {"claim_contains": ["补贴"], "source_hosts": ["hz.gov.cn", "hangzhou.gov.cn", "hrss.hangzhou.gov.cn"]}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["hz.gov.cn", "hangzhou.gov.cn", "hrss.hangzhou.gov.cn"]},
+      "needs_human": true
+    },
+    "budget": {"max_queries": 8, "max_wall_ms": 60000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "local"]
+  },
+  {
+    "id": "niche-local-shanghai-school",
+    "stratum": {"knowledge": "niche", "answer": "multihop"},
+    "domain": "local",
+    "locale": "zh-CN",
+    "query": "上海浦东新区 2026 年随迁子女入学对父母社保缴纳年限的要求是什么？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-03-31",
+    "grading": "source_only",
+    "expect": {
+      "route": {
+        "domain_any": ["local", "legal"],
+        "effort_any": ["standard", "deep"]
+      },
+      "answer": {"must_contain_any": ["社保", "居住证", "入学"]},
+      "facts": [
+        {"claim_contains": ["社保"], "source_hosts": ["pudong.gov.cn", "sh.gov.cn", "edu.sh.gov.cn"]}
+      ],
+      "sources": {"min": 1, "primary_hosts": ["pudong.gov.cn", "sh.gov.cn", "edu.sh.gov.cn"]},
+      "needs_human": true
+    },
+    "budget": {"max_queries": 8, "max_wall_ms": 60000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "local"]
+  },
+  {
+    "id": "niche-product-hhkb",
+    "stratum": {"knowledge": "niche", "answer": "analysis"},
+    "domain": "product",
+    "locale": "zh-CN",
+    "query": "HHKB Professional 2 和 Professional 3 的内部结构有什么差异？从 Pro 2 升级到 Pro 3 值得吗？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-06-30",
+    "grading": "rubric",
+    "expect": {
+      "route": {
+        "domain_any": ["product"],
+        "effort_any": ["standard", "deep"]
+      },
+      "answer": {
+        "must_contain_all": ["Pro 2", "Pro 3"],
+        "must_contain_any": ["结构", "静音", "蓝牙"]
+      },
+      "sources": {"min": 2},
+      "rubric": "rubrics/product-comparison.md",
+      "needs_human": true
+    },
+    "budget": {"max_queries": 12, "max_wall_ms": 120000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["deep", "product"]
+  },
+  {
+    "id": "niche-media-eva-endings",
+    "stratum": {"knowledge": "niche", "answer": "analysis"},
+    "domain": "media",
+    "locale": "zh-CN",
+    "query": "《新世纪福音战士》TV 版结局和旧剧场版结局有什么不同？哪种更接近庵野秀明的原意？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "rubric",
+    "expect": {
+      "route": {
+        "domain_any": ["media"],
+        "effort_any": ["standard", "deep"]
+      },
+      "answer": {
+        "must_contain_all": ["TV", "剧场版"],
+        "must_contain_any": ["庵野", "采访", "意图"]
+      },
+      "sources": {"min": 2},
+      "rubric": "rubrics/media-interpretation.md",
+      "needs_human": true
+    },
+    "budget": {"max_queries": 12, "max_wall_ms": 120000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["deep", "media"]
+  },
+  {
+    "id": "niche-legal-dsl-99",
+    "stratum": {"knowledge": "niche", "answer": "negative"},
+    "domain": "legal",
+    "locale": "zh-CN",
+    "query": "《中华人民共和国数据安全法》第 99 条规定的罚款上限是多少？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "status_any": ["answered", "abstained"],
+      "route": {
+        "domain_any": ["legal"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {
+        "must_contain_any": ["没有第99条", "不存在第99条", "共55条", "55条"],
+        "must_not_contain": ["第99条规定罚款"]
+      },
+      "facts": []
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["legal"]
+  },
+  {
+    "id": "niche-engineering-flash",
+    "stratum": {"knowledge": "niche", "answer": "negative"},
+    "domain": "engineering",
+    "locale": "zh-CN",
+    "query": "Adobe Flash Player 现在还能从官网下载吗？",
+    "as_of": "2026-10-31",
+    "verified_at": "2026-10-31",
+    "expires_at": "2027-10-31",
+    "grading": "deterministic",
+    "expect": {
+      "status_any": ["answered", "blocked"],
+      "on_block": "pass",
+      "route": {
+        "domain_any": ["engineering"],
+        "effort_any": ["quick", "standard"]
+      },
+      "answer": {
+        "must_contain_any": ["停止支持", "已停止", "不再提供", "2020-12-31"],
+        "must_not_contain": ["官网仍可下载"]
+      },
+      "facts": []
+    },
+    "budget": {"max_queries": 3, "max_wall_ms": 30000},
+    "repeat": {"runs": 3, "min_pass": 2},
+    "tags": ["smoke", "engineering"]
+  }
+]

@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.3.0 — 2026-10-31
+
+### Added
+
+- **分层搜索回归测试** `tests/eval/`：24 条种子用例，覆盖 12 个「知识层级 × 答案类型」格子（大众/专业/小众 × 明确/多跳/分析/负样本），并按 smoke / deep 打标签。
+- **输出契约** `tests/eval/contract.md`：评测模式下只输出 JSON（`status` / `answer` / `route` / `facts` / `sources`），判分器按字段判，不解析自然语言。
+- **判分与运行器**：`validate.py`（标准库校验）、`grade.py`（确定性断言 + Wilson 区间 + selftest）、`sut.py`（opencode / manual / mock）、`run.py`（offline / route / smoke / core / deep / case / baseline）。
+- **第 7 个结构门禁** `eval-cases`：校验用例字段、12 格覆盖、领域覆盖、gold 有效期与 query 泄漏。
+
+### Changed
+
+- `make check` 从 6 个 gate 变为 7 个；新增 `make eval-*` 目标，评测不并入 `make check`。
+- `SKILL.md` §6 增加一行：回归测试按 JSON 契约输出，日常使用不变。
+- `VERSION` 对齐到 `SKILL.md` frontmatter 的版本号。
+
+### Known gaps
+
+- 当前是 24 条种子集，目标 72 条；`suite.json` 已记录 target。
+- `source_only` 用例的数字需首次 live 运行后抽样复核；`rubric` 用例仍需人工评审，未接入 LLM judge。
+- `run.py` 默认单次运行；`make eval-core` / `eval-deep` 传 `--repeat`，按用例的 `runs` / `min_pass` 取结果。
+
 ## 2.2.0 — 2026-10-31
 
 ### Added

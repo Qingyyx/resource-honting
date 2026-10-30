@@ -2,7 +2,7 @@
 name: resource-hunting
 description: 跨领域外部信息与资源搜寻入口。用于找资料、数据、软件、作品、素材、商品、服务和专业信息，以及陌生领域、小众目标与深度调研。支持显式指定领域与强度（domain=<领域> effort=<quick|standard|deep>），未指定时按任务自动判定；按领域路由到专科来源与检索策略，默认走 ddgs 通用通道，检索经验沉淀为可复用的台账。不用于本地代码、文件或系统配置调查。
 metadata:
-  version: 2.2.0
+  version: 2.3.0
   category: Retrieval
   tags:
   - search
@@ -147,6 +147,7 @@ allowed-tools: Read,Grep,Glob,Bash,WebFetch
 - 资源状态分开报告：**对象已确认 / 入口已找到 / 页面可访问 / 获取条件已验证**。不把"页面打开"写成"文件可下载"。
 - 直接给结果与可点击出处；未解决的分歧如实列出。
 - 结尾补一段与任务规模相称的摘要：用了哪些通道与网站、来源可靠性观察、未解决缺口、本次的 domain/effort 判定。
+- 回归测试时按 `tests/eval/contract.md` 的 JSON 契约输出；日常使用仍按本节自然语言汇报。
 
 ## 7｜经验回填
 

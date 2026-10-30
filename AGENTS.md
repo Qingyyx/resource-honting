@@ -6,8 +6,13 @@
 
 | 命令 | 作用 |
 |---|---|
-| `make check` | 跑全部 6 个结构门禁（`python3 scripts/check.py`），改完必跑 |
+| `make check` | 跑全部 7 个结构门禁（`python3 scripts/check.py`），改完必跑 |
 | `make list` | 列出 gate 与说明 |
+| `make eval-offline` | 校验分层回归用例库（不调模型、不联网） |
+| `make eval-selftest` | 验证判分器本身（9 个断言） |
+| `make eval-route` / `eval-smoke` / `eval-core` / `eval-deep` | 分层回归，需要 opencode 或网络 |
+| `make eval-case ID=<case>` | 跑单条用例 |
+| `make eval-baseline` | 认可当前报告为基线 |
 | `python3 scripts/zhipu_search.py "关键词"` | 智谱搜狗通道的冒烟验证 |
 
 ## 唯一事实源
@@ -17,6 +22,7 @@
 | 参数语义、路由表、预算、停止门、输出要求 | [SKILL.md](SKILL.md) |
 | 各领域的一手源、端点、检索顺序、坑 | [references/routing.md](references/routing.md) |
 | 通道与站点的实测结论（可复用） | [references/field-notes.md](references/field-notes.md) |
+| 分层回归测试的用例、契约与运行方式 | [tests/eval/README.md](tests/eval/README.md) |
 | 版本与变更 | [VERSION](VERSION)、[CHANGELOG.md](CHANGELOG.md) |
 
 同一事实只写一处，其他位置只链接。
