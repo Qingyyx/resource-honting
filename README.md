@@ -40,7 +40,7 @@ git clone https://github.com/Qingyyx/resource-honting.git ~/.claude/skills/resou
 
 也可以把仓库放到任意 skills 目录，只要目录名是 `resource-hunting`。安装后重启会话，让运行时重新扫描 skills。
 
-运行时只需要 Python 3 标准库；回归测试需要 Python 3.11+。智谱通道是可选的，没有凭据时跳过，不影响默认的 `ddgs`。
+默认通用通道需要 `ddgs` CLI；AnySearch / Exa / OpenCLI / 智谱按需配置，未配置时按降级规则换路。`scripts/` 只用 Python 3 标准库，回归测试需要 Python 3.11+。
 
 ## 使用
 
