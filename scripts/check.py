@@ -75,20 +75,31 @@ def gate_sections() -> list[str]:
 
 def gate_links() -> list[str]:
     errs: list[str] = []
-    for name in ("SKILL.md",):
-        text = read(ROOT / name)
-        for target in re.findall(r"\]\((references/[^)]+)\)", text):
-            if not (ROOT / target).exists():
-                errs.append(f"{name} 引用了不存在的文件: {target}")
+    paths = [SKILL, ROOT / "AGENTS.md", *sorted(REFS.glob("*.md"))]
+    for path in paths:
+        text = read(path)
+        for target in re.findall(r"\]\(([^)#]+?\.md)(?:#[^)]*)?\)", text):
+            if target.startswith(("http://", "https://")):
+                continue
+            if not (path.parent / target).resolve().exists():
+                errs.append(f"{path.relative_to(ROOT)} 引用了不存在的文件: {target}")
     return errs
 
 
 def gate_all_references_listed() -> list[str]:
     text = read(SKILL)
+    index_path = REFS / "README.md"
+    index = read(index_path) if index_path.exists() else ""
     errs: list[str] = []
+    if "references/README.md" not in text:
+        errs.append("未被 SKILL.md 加载表引用: references/README.md")
     for path in sorted(REFS.glob("*.md")):
+        if path.name == "README.md":
+            continue
         if f"references/{path.name}" not in text:
             errs.append(f"未被 SKILL.md 加载表引用: references/{path.name}")
+        if f"]({path.name})" not in index:
+            errs.append(f"references/README.md 索引未链接: {path.name}")
     return errs
 
 
@@ -142,8 +153,8 @@ GATES = {
 GATE_DESC = {
     "frontmatter": "frontmatter 必备字段与 semver",
     "sections": "SKILL.md 章节锚点完整",
-    "links": "SKILL.md 引用的 references 文件存在",
-    "reference-index": "references 下每个文件都被加载表引用",
+    "links": "SKILL/AGENTS/references 的相对 .md 链接可达",
+    "reference-index": "references 每个文件都被 SKILL 加载表与索引覆盖",
     "budget": f"SKILL.md 不超过 {MAX_SKILL_LINES} 行",
     "field-notes-format": "field-notes 新条目 5 段且判定合法",
     "eval-cases": "分层回归用例的字段、覆盖与 gold 有效期",

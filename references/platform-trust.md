@@ -1,7 +1,7 @@
 # 平台置信度分级
 
 > 本文件提供来源评估起点，最终置信度按具体主张、原始证据、版本与利益关系判断，表中档位不是整个平台的质量保证。
-> 需要评价来源时查对应条目；已有历史观察见 `field-notes.md`。新增跨任务经验按 SKILL.md 的维护规则执行；官方/专业入口与动漫游戏源见 `source-directory.md`。
+> 需要评价来源时查对应条目；已有历史观察见 `field-notes.md`。新增跨任务经验按 SKILL.md 的维护规则执行；官方/专业入口与动漫游戏源见 `discovery.md`。
 
 ## 核心判断维度
 
@@ -88,7 +88,7 @@
 | 行业深度调研 | 官方统计+公司披露（L1）> 研报/咨询/白皮书（L2）> 深度播客访谈（L3，叙事用）——流程与源库见 `deep-research-sources.md` |
 | 学术文献深挖 | 学科专属库（arxiv/dblp/pubmed/cnki/ncpssd）> 综合检索（semanticscholar/openalex/google-scholar）> Consensus/Elicit 综合 |
 | 专家/从业者观点 | 播客/长访谈文字稿（自称身份需核验）> 会议演讲 > 知乎长文/付费 newsletter（均按"声称"模态汇报） |
-| 动漫游戏及素材 | 发行方/作者具体发布页确认获取条件；社区目录确定身份、垂直 Wiki/社区补内容与经验，见 source-directory.md |
+| 动漫游戏及素材 | 发行方/作者具体发布页确认获取条件；社区目录确定身份、垂直 Wiki/社区补内容与经验，见 discovery.md |
 
 ## 购买前查证流程
 

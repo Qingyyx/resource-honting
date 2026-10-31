@@ -20,6 +20,7 @@
 | 事实 | 家 |
 |---|---|
 | 参数语义、路由表、预算、停止门、输出要求 | [SKILL.md](SKILL.md) |
+| 参考文档索引（找 / 判 / 记） | [references/README.md](references/README.md) |
 | 各领域的一手源、端点、检索顺序、坑 | [references/routing.md](references/routing.md) |
 | 通道与站点的实测结论（可复用） | [references/field-notes.md](references/field-notes.md) |
 | 分层回归测试的用例、契约与运行方式 | [tests/eval/README.md](tests/eval/README.md) |
@@ -30,7 +31,7 @@
 ## 硬规则
 
 1. 改 `domain` / `effort` 的语义、章节编号或停止门，必须同步改 `scripts/check.py` 的 `REQUIRED_SECTIONS`，否则 `make check` 会拦下。
-2. 新增 `references/*.md` 必须在 SKILL.md 的加载表里加一行，否则 `reference-index` gate 失败。
+2. 新增或改名 `references/*.md` 必须同步 SKILL.md 加载表与 `references/README.md` 索引，否则 `reference-index` gate 失败。
 3. `field-notes.md` 的新条目只能是 5 段，判定值只能取 6 个枚举之一。
 4. SKILL.md 不超过 260 行；超了先压缩，不要先扩预算。
 5. 台账写入需用户确认，一次失败不得推广成平台整体不可靠。

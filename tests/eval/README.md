@@ -26,7 +26,10 @@ tests/eval/
   reports/            # 运行报告，gitignore
   runs/               # 原始输出与 manual 提示，gitignore
   baseline.json       # 上一次认可的基线，提交进仓库
+  methodology.md      # 评测方法与指标
 ```
+
+评测方法与指标（成功条件、规则检查 vs 真实检索、指标口径）见 [methodology.md](methodology.md)。
 
 ## 快速开始
 

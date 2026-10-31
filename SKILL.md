@@ -2,7 +2,7 @@
 name: resource-hunting
 description: 跨领域外部信息与资源搜寻入口。用于找资料、数据、软件、作品、素材、商品、服务和专业信息，以及陌生领域、小众目标与深度调研。支持显式指定领域与强度（domain=<领域> effort=<quick|standard|deep>），未指定时按任务自动判定；按领域路由到专科来源与检索策略，默认走 ddgs 通用通道，检索经验沉淀为可复用的台账。不用于本地代码、文件或系统配置调查。
 metadata:
-  version: 2.3.0
+  version: 2.3.1
   category: Retrieval
   tags:
   - search
@@ -177,15 +177,14 @@ allowed-tools: Read,Grep,Glob,Bash,WebFetch
 
 | 需要解决什么 | 读取什么 |
 |---|---|
+| 不知道先读哪个参考 | [references/README.md](references/README.md) |
 | 某领域的具体检索式、API、入口 | [routing.md](references/routing.md) |
+| 来源地图、陌生领域、搜索无结果 | [discovery.md](references/discovery.md) |
+| 工具降级、搜索操作符、通道选择、腾讯/知乎检索 | [search-tools.md](references/search-tools.md) |
 | 判断具体来源与结论可信度 | [platform-trust.md](references/platform-trust.md)；重要事实、身份声称再读 [credibility-framework.md](references/credibility-framework.md) |
-| 各类资源如何产生、编目与分发 | [source-directory.md](references/source-directory.md) |
-| 陌生领域建立检索路线、搜索无结果 | [resource-discovery.md](references/resource-discovery.md) |
-| 工具降级、搜索操作符、通道选择 | [search-tools.md](references/search-tools.md) |
-| 腾讯新闻/企鹅号、知乎检索 | [zhipu-search.md](references/zhipu-search.md) |
 | 系统调研、论文、行业数据、研报 | [deep-research-sources.md](references/deep-research-sources.md) |
 | 平台访问异常、查历史经验 | [field-notes.md](references/field-notes.md) |
-| 评估检索能力是否真提高找回率 | [retrieval-evaluation.md](references/retrieval-evaluation.md) |
+| 评估检索能力是否真提高找回率 | [tests/eval/README.md](tests/eval/README.md) |
 | 多条证据合成结论、冲突裁决、信心与可能性标注 | [evidence-synthesis.md](references/evidence-synthesis.md) |
 
 只加载当前任务相关的参考，不要每次全读。

@@ -86,7 +86,7 @@
 - **就业/行业内部**：一亩三分地、牛客、LinkedIn、脉脉；官方职位和公司公告先查，员工自述另行验证。
 - **垂直领域**：汽车之家/懂车帝（汽车）、Steam 与 Newzoo（游戏）、IMDb/TVmaze（影视）、当地食酒旅平台（消费）；分别判断数据、分析和用户体验的证据性质。
 - **技术风向**：Hacker News、GitHub、掘金等补线索；Stack Overflow Developer Survey、State of JS、GitHub Octoverse 等调查核对样本与方法。
-- 网页、站内搜索与已连接工具按需选择；动漫游戏及其他资源入口见 [source-directory.md](source-directory.md)。
+- 网页、站内搜索与已连接工具按需选择；动漫游戏及其他资源入口见 [discovery.md](discovery.md)。
 
 ## 四、深度播客与访谈（L3，从业者叙事层）
 

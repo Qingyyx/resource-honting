@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.3.1 — 2026-10-31
+
+### Changed
+
+- **`references/` 收敛**：11 个平铺文件整理为 8 个专题 + 1 个索引。新增 [references/README.md](references/README.md)，按"找 / 判 / 记 / 评测"分组，并给出常用组合。
+- **`source-directory.md` 并入 `resource-discovery.md`**，改名 [discovery.md](references/discovery.md)：来源地图（角色 / 资源形态 / 入口示例）+ 检索路线（目标、身份、失败原因、覆盖、交付）。
+- **`zhipu-search.md` 并入 [search-tools.md](references/search-tools.md) 的 §六**：通道选择、参数、凭据与错误处理放在同一篇，不再单独占一个文件。
+- **`retrieval-evaluation.md` 移到 [tests/eval/methodology.md](tests/eval/methodology.md)**：评测方法与测试集同处，references 只保留检索与判断知识。
+- **门禁收紧**：`links` 现在检查 SKILL.md、AGENTS.md 与 references 的相对 `.md` 链接；`reference-index` 同时校验 `references/README.md` 是否覆盖每个专题文件。
+
 ## 2.3.0 — 2026-10-31
 
 ### Added
