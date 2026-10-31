@@ -40,7 +40,45 @@ git clone https://github.com/Qingyyx/resource-honting.git ~/.claude/skills/resou
 
 也可以把仓库放到任意 skills 目录，只要目录名是 `resource-hunting`。安装后重启会话，让运行时重新扫描 skills。
 
-默认通用通道需要 `ddgs` CLI；AnySearch / Exa / OpenCLI / 智谱按需配置，未配置时按降级规则换路。`scripts/` 只用 Python 3 标准库，回归测试需要 Python 3.11+。
+安装完 skill 后，还需要至少装一个搜索通道；见下一节。`scripts/` 只用 Python 3 标准库，回归测试需要 Python 3.11+。
+
+## 依赖与搜索工具
+
+本仓库只包含 skill 的提示词、参考文档和脚本，**不包含搜索服务本身**。至少装一个通用通道；其余按需，缺了会按降级规则换路。
+
+| 工具 | 是否必需 | 用途 | 安装 / 配置 |
+|---|---|---|---|
+| `ddgs` | 必需（默认通道） | 通用检索、来源发现 | `pipx install ddgs`，验证 `ddgs version` |
+| AnySearch | 推荐 | 正文提取、结构化 / 垂直检索 | 独立 skill：`git clone https://github.com/anysearch-ai/anysearch-skill.git ~/.agents/skills/anysearch`；API Key 可选 |
+| Exa | 可选 | 语义检索、一手源溯源 | 按 [Exa 官方文档](https://exa.ai/docs/reference/search) 接入 MCP / API，需要 `EXA_API_KEY` |
+| OpenCLI | 可选 | 登录态站内检索、结构化字段 | `npm install -g @jackwener/opencli`（Node >= 21）；登录态场景需 Chrome 扩展，`opencli doctor` 检查 |
+| 智谱搜狗 | 可选 | 腾讯新闻 / 企鹅号、知乎 | 本仓库自带 `scripts/zhipu_search.py`；配置 `ZHIPU_API_KEY` 或 `ZHIPUAI_API_KEY` |
+
+### 最小安装
+
+```bash
+# 1) 默认通用通道
+pipx install ddgs
+ddgs version
+
+# 2) 正文 / 取证（可选，推荐）
+git clone https://github.com/anysearch-ai/anysearch-skill.git ~/.agents/skills/anysearch
+python3 ~/.agents/skills/anysearch/scripts/anysearch_cli.py doc
+
+# 3) 登录态站内检索（可选）
+npm install -g @jackwener/opencli
+opencli doctor
+
+# 4) 腾讯 / 知乎补充（可选）
+export ZHIPU_API_KEY="..."
+python3 <skill_dir>/scripts/zhipu_search.py "测试" --count 10
+```
+
+- `pipx` 安装后如果找不到命令，运行 `pipx ensurepath` 并重开 shell；没有 `pipx` 时用 `python3 -m pip install --user ddgs`。
+- AnySearch 的 API Key 可选，匿名访问有较低限额；配置 `ANYSEARCH_API_KEY`，详见其 `README.md`。Python CLI 需要 `requests`；没有就用其 Node 或 Shell 版本。
+- OpenCLI 的 `PUBLIC` 适配器不需要浏览器；`COOKIE` / `INTERCEPT` / `UI` 才需要 Chrome 登录态和扩展。
+- 智谱通道没有 key 时跳过，不影响 `ddgs`；`<skill_dir>` 替换为实际安装目录（例如 `~/.agents/skills/resource-hunting`），脚本只读环境变量或技能目录 `.env`，不会打印密钥。
+- Exa 不是必需项；没有配置时，skill 用 ddgs / AnySearch 继续，不会假装调用成功。
 
 ## 使用
 
